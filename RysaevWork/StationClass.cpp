@@ -17,7 +17,7 @@ void StationClass::ShowStation()
 		cout << "================================================================================" << endl;
 		cout << "Station" << '\n' << "Id Station" << setw(28) << "Name" << setw(12) << "Workshop" << setw(19) << "Working station" << setw(11) << "Percent" << endl;
 		cout << "================================================================================" << endl;
-		for (auto& s : mapStation) {
+		for (const auto& s : mapStation) {
 			std::cout << s.second.id << std::setw(37) << s.second.name << std::setw(12) << s.second.WorkShop << std::setw(19) << s.second.NumberWorkShop << std::setw(11) << s.second.eff << std::endl;
 		}
 	}
@@ -81,7 +81,7 @@ void StationClass::SaveStationFile(std::ofstream& out)
 	if (!mapStation.empty())
 	{
 		out << Station::MaxIdStation << std::endl;
-		for (auto& S : mapStation) {
+		for (const auto& S : mapStation) {
 			S.second.SaveStation(out);
 		}
 	}
@@ -163,7 +163,7 @@ void StationClass::PacketStation()
 	std::cout << "Choose" << std::endl;
 	std::cout << "1-Delete all stations" << std::endl;
 	std::cout << "2-Edit all stations" << std::endl;
-	std::cout << "3-Edit definite pipes" << std::endl;
+	std::cout << "3-Edit definite stations" << std::endl;
 	a = GetCorrectNumber(1, 3);
 	switch (a) {
 	case 1:
