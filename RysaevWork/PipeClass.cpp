@@ -51,7 +51,7 @@ void PipeClass::DeletePipe()
 		if (mapPipe.find(DeleteId) != mapPipe.end()) {
 			std::cout << "Pipe is find" << std::endl;
 			mapPipe.erase(DeleteId);
-			Pipe::MaxIdPipe--;
+			
 			std:: cout<< "Pipe is delete" << std::endl;
 		}
 		else std::cout << "Pipe is not find" << std::endl;

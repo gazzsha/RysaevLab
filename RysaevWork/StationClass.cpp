@@ -68,7 +68,6 @@ void StationClass::DeleteStation()
 			if (mapStation.find(DeleteId) != mapStation.end()) {
 				std::cout << "Station is find" << std::endl;
 				mapStation.erase(DeleteId);
-				Station::MaxIdStation--;
 				std::cout<< "Station is delete" << std::endl;
 			}
 			else std::cout << "Station is not find" << std::endl;
@@ -81,7 +80,7 @@ void StationClass::SaveStationFile(std::ofstream& out)
 	if (!mapStation.empty())
 	{
 		out << Station::MaxIdStation << std::endl;
-		for (const auto& S : mapStation) {
+		for ( auto& S : mapStation) {
 			S.second.SaveStation(out);
 		}
 	}
@@ -209,7 +208,7 @@ void StationClass::PacketStation()
 		int a;
 		std::cout << "Choose" << std::endl;
 		std::cout << "1-Name" << std::endl;
-		std::cout << "2-Working station" << std::endl;
+		std::cout << "2-Percent of not working station" << std::endl;
 		a = GetCorrectNumber(1, 2);
 		switch (a) {
 		case 1:
@@ -241,15 +240,15 @@ void StationClass::PacketStation()
 			ShowStation();
 			int Param;
 			StationFilterId.clear();
-			std::cout << "Number of working stations?" << std::endl;
-			Param = GetCorrectNumber(1, 20);
+			std::cout << "Percent of not working stations?" << std::endl;
+			Param = GetCorrectNumber(1, 100);
 			for (const auto& s : mapStation) {
-				if (Param == s.second.NumberWorkShop)
+				if (Param * s.second.WorkShop <= (s.second.WorkShop - s.second.NumberWorkShop) * 100)
 					StationFilterId.push_back(s.first);
 			}
 			if (size(StationFilterId) != 0) {
 				for (auto& s : StationFilterId) {
-					std::cout << "Station with this value of working stations:" << Param << ' ' << "is find" << ' ' << "Number of workShop: " << mapStation[s].WorkShop << std::endl;
+					std::cout << "Station with this value of not working stations:" << Param << ' ' << "is find" << "Id of station: "<<mapStation[s].id<<' ' << "Number of workingShop: " << mapStation[s].NumberWorkShop << std::endl;
 					mapStation[s].NumberWorkShop = GetCorrectNumber(1, mapStation[s].WorkShop);
 				}
 				std::cout << "Selected stations are edit" << endl;

@@ -37,7 +37,6 @@ int main()
 {
 	PipeClass PipeInf;
 	StationClass StationInf;
-	//vector<Pipe> Pipe(1);
 	while (1) {
 		printMenu();
 		switch (GetCorrectNumber(1, 13))
@@ -124,8 +123,6 @@ int main()
 			StationInf.PacketStation();
 		}
 		break;
-		default:
-			break;
 		}
 	}
 }
