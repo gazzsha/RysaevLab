@@ -247,8 +247,8 @@ void StationClass::PacketStation()
 			if (size(StationFilterId) == 0) {
 				break;
 			}
-			std::cout << "Edit found stations \n1.Edit all \n2.Edit the specified stations" << std::endl;
-			a = GetCorrectNumber(1, 2);
+			std::cout << "Edit found stations \n1.Edit all \n2.Edit the specified stations\n3.Delete all\n4.Delete the specified stations\n5.Close" << std::endl;
+			a = GetCorrectNumber(1, 5);
 			switch (a) {
 			case 1: {
 				for (const auto& p : StationFilterId) {
@@ -269,7 +269,7 @@ void StationClass::PacketStation()
 					std::cout << p << ' ';
 				}
 				std::cout << std::endl;
-				std::cout << "Write the pipe IDs which you want to change(0-Exit): " << std::endl;
+				std::cout << "Write the stations IDs which you want to change(0-Exit): " << std::endl;
 				while (a != 0) {
 					std::cout << "Id: "; a = GetCorrectNumber(0, Station::MaxIdStation);
 					if (std::find(res.begin(), res.end(), a) != res.end()) {
@@ -284,7 +284,7 @@ void StationClass::PacketStation()
 				for (const auto& p : StationFilterId) {
 					for (const auto& d : res) {
 						if (p == d) {
-							std::cout << "Pipe Id: " << mapStation[p].id << ' ' << "Name: " << mapStation[p].name << std::endl;
+							std::cout << "Station Id: " << mapStation[p].id << ' ' << "Name: " << mapStation[p].name << std::endl;
 							std::cout << "New name(Max 30 symbol): ";
 							filter::GetCorrectString(mapStation[p].name, 30);
 							std::cout << std::endl;
@@ -293,6 +293,56 @@ void StationClass::PacketStation()
 
 				}
 
+			}
+			break;
+			case 3:
+			{
+				for (const auto& p : StationFilterId) {
+					mapStation.erase(p);
+				}
+				system("cls");
+				std::cout << "Stations are deleted" << std::endl;
+			}
+			break;
+			case 4: {
+
+				int a = 1;
+				std::vector<int> res;
+				res.clear();
+				std::cout << "Available IDs: ";
+				for (const auto& p : StationFilterId) {
+					std::cout << p << ' ';
+				}
+				std::cout << std::endl;
+				std::cout << "Write the stations IDs which you want to delete(0-Exit): " << std::endl;
+				while (a != 0) {
+					std::cout << "Id: "; a = GetCorrectNumber(0, Station::MaxIdStation);
+					if (std::find(res.begin(), res.end(), a) != res.end()) {
+						std::cout << "The element repeats" << std::endl; continue;
+					}
+					else res.push_back(a);
+					if ((std::find(StationFilterId.begin(), StationFilterId.end(), a) == StationFilterId.end()) && (a != 0)) {
+						std::cout << "This ID was not found" << std::endl; continue;
+					}
+				}
+				res.pop_back();
+				for (const auto& p : StationFilterId) {
+					for (const auto& d : res) {
+						if (p == d) {
+							mapStation.erase(p);
+						}
+					}
+
+				}
+				system("cls");
+				std::cout << "Stations are deleted" << std::endl;
+
+			}
+				  break;
+			case 5:
+			{
+				system("cls");
+				break;
 			}
 			break;
 			}
@@ -308,8 +358,8 @@ void StationClass::PacketStation()
 			if (size(StationFilterId) == 0) {
 				break;
 			}
-			std::cout << "Edit found stations \n1.Edit all \n2.Edit the specified stations" << std::endl;
-			a = GetCorrectNumber(1, 2);
+			std::cout << "Edit found stations \n1.Edit all \n2.Edit the specified stations\n3.Delete all\n4.Delete the specified stations\n5.Close" << std::endl;
+			a = GetCorrectNumber(1, 5);
 			switch (a) {
 			case 1: 
 			{
@@ -367,6 +417,55 @@ void StationClass::PacketStation()
 
 			}
 			break;
+			case 3:
+			{
+				for (const auto& p : StationFilterId) {
+					mapStation.erase(p);
+				}
+				system("cls");
+				std::cout << "Stations are deleted" << std::endl;
+			}
+			break;
+			case 4:
+			{
+				int a = 1;
+				std::vector<int> res;
+				res.clear();
+				std::cout << "Available IDs: ";
+				for (const auto& p : StationFilterId) {
+					std::cout << p << ' ';
+				}
+				std::cout << std::endl;
+				std::cout << "Write the stations IDs which you want to delete(0-Exit): " << std::endl;
+				while (a != 0) {
+					std::cout << "Id: "; a = GetCorrectNumber(0, Station::MaxIdStation);
+					if (std::find(res.begin(), res.end(), a) != res.end()) {
+						std::cout << "The element repeats" << std::endl; continue;
+					}
+					else res.push_back(a);
+					if ((std::find(StationFilterId.begin(), StationFilterId.end(), a) == StationFilterId.end()) && (a != 0)) {
+						std::cout << "This ID was not found" << std::endl; continue;
+					}
+				}
+				res.pop_back();
+				for (const auto& p : StationFilterId) {
+					for (const auto& d : res) {
+						if (p == d) {
+							mapStation.erase(p);
+						}
+					}
+
+				}
+				system("cls");
+				std::cout << "Stations are deleted" << std::endl;
+
+			}
+			break;
+			case 5:
+			{
+				system("cls");
+				break;
+			}
 			}
 			
 		}

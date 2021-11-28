@@ -144,22 +144,22 @@ void PipeClass::PacketPipe()
 		if (size(PipeFilterId) == 0) {
 			break;
 		}
-		std::cout << "Edit found pipes \n1.Edit all \n2.Edit the specified pipes"<<std::endl;
-		a = GetCorrectNumber(1, 2);
+		std::cout << "Edit found pipes \n1.Edit all \n2.Edit the specified pipes\n3.Delete all\n4.Delete the specified pipes\n5.Close" << std::endl;
+		a = GetCorrectNumber(1, 5);
 		switch (a) {
-		case 1: 
+		case 1:
 		{
 			for (const auto& p : PipeFilterId) {
-				std::cout << "Pipe id: " << mapPipe[p].id << ' ' << "Pipe status: " << mapPipe[p].work <<std::endl;
+				std::cout << "Pipe id: " << mapPipe[p].id << ' ' << "Pipe status: " << mapPipe[p].work << std::endl;
 				std::cout << "New status of pipe(0-Not wotking,1-Working) ";
 				mapPipe[p].work = filter::GetCorrectBool();
 				std::cout << std::endl;
 			}
 		}
 		break;
-		case 2: 
+		case 2:
 		{
-			int a=1;
+			int a = 1;
 			std::vector <int> res;
 			res.clear();
 			std::cout << "Available IDs: ";
@@ -174,7 +174,7 @@ void PipeClass::PacketPipe()
 					std::cout << "The element repeats" << std::endl; continue;
 				}
 				else res.push_back(a);
-				if ((std::find(PipeFilterId.begin(), PipeFilterId.end(), a) == PipeFilterId.end()) && (a!=0)) {
+				if ((std::find(PipeFilterId.begin(), PipeFilterId.end(), a) == PipeFilterId.end()) && (a != 0)) {
 					std::cout << "This ID was not found" << std::endl; continue;
 				}
 			}
@@ -182,28 +182,78 @@ void PipeClass::PacketPipe()
 			for (const auto& p : PipeFilterId) {
 				for (const auto& d : res) {
 					if (p == d) {
-						std::cout << "Pipe Id: " << mapPipe[p].id << ' ' << "Work status: " << mapPipe[p].work <<std::endl;
+						std::cout << "Pipe Id: " << mapPipe[p].id << ' ' << "Work status: " << mapPipe[p].work << std::endl;
 						std::cout << "New status of pipe(0-Not wotking,1-Working) ";
 						mapPipe[p].work = filter::GetCorrectBool();
 						std::cout << std::endl;
 					}
 				}
-				
-			} 
 
-			
+			}
+
+
 		}
 		break;
-		case 4: 
+		case 3:
 		{
+			for (auto& s : PipeFilterId) {
+				mapPipe.erase(s);
+			}
+			system("cls");
+			std::cout << "Pipes are deleted" << std::endl;
+		}
+		break;
+		case 4:
+		{
+			int a = 1;
+			std::vector <int> res;
+			res.clear();
+			std::cout << "Available IDs: ";
+			for (const auto& p : PipeFilterId) {
+				std::cout << p << ' ';
+			}
+			std::cout << std::endl;
+			std::cout << "Write the pipe IDs which you want to change(0-Exit): " << std::endl;
+			while (a != 0) {
+				std::cout << "Id: "; a = GetCorrectNumber(0, Pipe::MaxIdPipe);
+				if (std::find(res.begin(), res.end(), a) != res.end()) {
+					std::cout << "The element repeats" << std::endl; continue;
+				}
+				else res.push_back(a);
+				if ((std::find(PipeFilterId.begin(), PipeFilterId.end(), a) == PipeFilterId.end()) && (a != 0)) {
+					std::cout << "This ID was not found" << std::endl; continue;
+				}
+			}
+			res.pop_back();
+			for (const auto& p : PipeFilterId) {
+				for (const auto& d : res) {
+					if (p == d) {
+						mapPipe.erase(p);
+					}
+				}
+
+			}
+			system("cls");
+			std::cout << "Pipes are deleted" << std::endl;
+
+		}
+		break;
+		case 5: {
+			system("cls");
 			break;
 		}
-		break;
+			  break;
 		}
-		
 	}
 	break;
-	}
+	case 4: 
+		{
+		system("cls");
+			break;
+		}
+
+		}
+	
 
 	}
 
