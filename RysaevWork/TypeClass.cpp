@@ -39,8 +39,8 @@ Station::Station()
 {
 	MaxIdStation++;
 	this->id = MaxIdStation;
-	std::cout << "Name:" << std::endl;
-	filter::GetCorrectString(this->name);
+	std::cout << "MaxSize of name: 30, Name: " << std::endl;
+	filter::GetCorrectString(this->name,30);
 	std::cout << "WorkShop:" << std::endl;
 	this->WorkShop = GetCorrectNumber(1, 20);
 	std::cout << "Number on working shop:" << std::endl;

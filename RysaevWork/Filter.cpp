@@ -17,15 +17,15 @@ bool filter::GetCorrectBool()
 	}
 }
 
-std::string filter::GetCorrectString(std::string& k)
+std::string filter::GetCorrectString(std::string& k,int lenght)
 {
 		std::string a;
 		std::cin.seekg(std::cin.eof());
 		std::getline(std::cin, a);
 		k = a;
 		a.erase(remove(a.begin(), a.end(), ' '), a.end());
-		while (a.empty()) {
-			std::cout << "Try again.\n";
+		while (a.empty() || size(a) > lenght) {
+			std::cout << "Try again,MaxSize :"<<lenght<<'\n';
 			std::getline(std::cin, a);
 			k = a;
 			a.erase(remove(a.begin(), a.end(), ' '), a.end());

@@ -7,7 +7,7 @@
 
 namespace filter {
 	bool GetCorrectBool();
-	std::string GetCorrectString(std::string& k);
+	std::string GetCorrectString(std::string& k,int lenght);
 }
 template <typename T> 
 T GetCorrectNumber(T min, T max)

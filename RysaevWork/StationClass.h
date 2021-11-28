@@ -16,5 +16,7 @@ public:
 	void LoadStationFile(std::ifstream& fin);
 	void FilterStation();
 	void PacketStation();
+	void FilterNameStation();
+	void FilterPercentageStation();
 };
 

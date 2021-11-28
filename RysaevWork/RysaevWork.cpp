@@ -9,6 +9,7 @@
 #include <fstream>
 #include <vector>
 #include <iomanip>
+#include <stdio.h>
 int Pipe::MaxIdPipe = 0;
 int Station::MaxIdStation = 0;
 using namespace std;
@@ -54,6 +55,7 @@ int main()
 		break;
 		case 3:
 		{
+			system("cls");
 			PipeInf.ShowPipe();
 			StationInf.ShowStation();
 		}
@@ -80,32 +82,42 @@ int main()
 		break;
 		case 8:
 		{
-			ofstream out;
-			out.open("file.txt", ios::out);
-			if (out.is_open())
-			{
-				PipeInf.SavePipeFile(out);
-				out << ' ' << std::endl;
-				StationInf.SaveStationFile(out);
-				out.close();
-			}
+			system("cls");
+			string filename;
+			cout << "MaxSize of name: 20,Filename: " << endl;
+			filter::GetCorrectString(filename,20);
+				ofstream out;
+				out.open(filename, ios::out);
+				if (out.is_open())
+				{
+					PipeInf.SavePipeFile(out);
+					out << ' ' << std::endl;
+					StationInf.SaveStationFile(out);
+					out.close();
+				}
+			
 		}
 		break;
 		case 9:
 		{
+			system("cls");
 			ifstream fin;
-			fin.open("file.txt", ios::in);
+			string filename;
+			cout << "MaxSize of name: 20,Filename: " << endl;
+			filter::GetCorrectString(filename,20);
+			fin.open(filename, ios::in);
 			if (fin.is_open()) {
 				PipeInf.LoadPipeFile(fin);
 				fin.ignore(1000, '\n');
 				StationInf.LoadStationFile(fin);
+				fin.close();
 			}
-			fin.close();
+			else cout << "Not find file" << endl;
 		}
 		break;
 		case 10:
 		{
-			PipeInf.SearchByFilter();
+			PipeInf.FilterPaip();
 		}
 		break;
 		case 11:

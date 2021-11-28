@@ -2,7 +2,7 @@
 #include <iomanip>
 #include "Filter.h"
 #include "TypeClass.h"
-
+#include <algorithm>
 
 void PipeClass::AddPipe()
 {
@@ -39,7 +39,6 @@ void PipeClass::ChangePipe()
 
 	}
 	else std::cout << "Pipe is not imput" << std::endl;
-
 }
 
 void PipeClass::DeletePipe()
@@ -85,19 +84,15 @@ void PipeClass::LoadPipeFile(std::ifstream& fin){
 
 void PipeClass::FilterPaip()
 {
+	system("cls");
 	bool Param;
 	PipeFilterId.clear();
-	std::cout << "Work status of Pipe?" << std::endl;
+	std::cout << "Write down what status of pipes to look for: \n0-Not work \n1-Work" << std::endl;
 	Param = filter::GetCorrectBool();
 	for (const auto& P : mapPipe) {
 		if (P.second.work == Param)
 			PipeFilterId.push_back(P.first);
 	}
-}
-
-void PipeClass::SearchByFilter()
-{
-	FilterPaip();
 	if (size(PipeFilterId) != 0) {
 		std::cout << "==================================================" << std::endl;
 		std::cout << "Pipe" << '\n' << "Id Pipe" << std::setw(12) << "Length" << std::setw(19) << "Diameter" << std::setw(11) << "Work" << std::endl;
@@ -111,15 +106,18 @@ void PipeClass::SearchByFilter()
 
 void PipeClass::PacketPipe()
 {
+	system("cls");
+	if (Pipe::MaxIdPipe == 0) {
+		std::cout << "Enter the pipe data" << std::endl;
+		return void();
+	}
 	int a;
-	std::cout << "Choose" << std::endl;
-	std::cout << "1-Delete all pipes" << std::endl;
-	std::cout << "2-Edit all pipes" << std::endl;
-	std::cout << "3-Edit definite pipes" << std::endl;
-	a = GetCorrectNumber(1, 3);
+	std::cout << "Choose\n1-Delete all pipes\n2-Edit all pipes\n3-Edit definite pipes\n4.Close" << std::endl;
+	a = GetCorrectNumber(1, 4);
 	switch (a) {
 	case 1: 
 	{
+		system("cls");
 		mapPipe.clear();
 		Pipe::MaxIdPipe = 0;
 		std::cout << "All pipes are delete" << std::endl;
@@ -127,19 +125,82 @@ void PipeClass::PacketPipe()
 	break;
 	case 2: 
 	{
-		for (auto& P : mapPipe) {
-			P.second.work = !P.second.work;
+		system("cls");
+		ShowPipe();
+		for ( auto& p : mapPipe) {
+			std::cout << "Pipe id: " << p.second.id<< ' ' << "Pipe status: " << p.second.work << std::endl;
+			std::cout << "New status of pipe(0-Not wotking,1-Working) ";
+			p.second.work = filter::GetCorrectBool();
+			std::cout << std::endl;
 		}
 		std::cout << "All pipes are edit" << std::endl;
 	}
 	break;
 	case 3: 
 	{
+		int a;
+		system("cls");
 		FilterPaip();
-		for (auto& p : PipeFilterId) {
-			mapPipe[p].work = !mapPipe[p].work;
+		if (size(PipeFilterId) == 0) {
+			break;
 		}
-		std::cout << "Selected pipes are edit" << std::endl;
+		std::cout << "Edit found pipes \n1.Edit all \n2.Edit the specified pipes"<<std::endl;
+		a = GetCorrectNumber(1, 2);
+		switch (a) {
+		case 1: 
+		{
+			for (const auto& p : PipeFilterId) {
+				std::cout << "Pipe id: " << mapPipe[p].id << ' ' << "Pipe status: " << mapPipe[p].work <<std::endl;
+				std::cout << "New status of pipe(0-Not wotking,1-Working) ";
+				mapPipe[p].work = filter::GetCorrectBool();
+				std::cout << std::endl;
+			}
+		}
+		break;
+		case 2: 
+		{
+			int a=1;
+			std::vector <int> res;
+			res.clear();
+			std::cout << "Available IDs: ";
+			for (const auto& p : PipeFilterId) {
+				std::cout << p << ' ';
+			}
+			std::cout << std::endl;
+			std::cout << "Write the pipe IDs which you want to change(0-Exit): " << std::endl;
+			while (a != 0) {
+				std::cout << "Id: "; a = GetCorrectNumber(0, Pipe::MaxIdPipe);
+				if (std::find(res.begin(), res.end(), a) != res.end()) {
+					std::cout << "The element repeats" << std::endl; continue;
+				}
+				else res.push_back(a);
+				if ((std::find(PipeFilterId.begin(), PipeFilterId.end(), a) == PipeFilterId.end()) && (a!=0)) {
+					std::cout << "This ID was not found" << std::endl; continue;
+				}
+			}
+			res.pop_back();
+			for (const auto& p : PipeFilterId) {
+				for (const auto& d : res) {
+					if (p == d) {
+						std::cout << "Pipe Id: " << mapPipe[p].id << ' ' << "Work status: " << mapPipe[p].work <<std::endl;
+						std::cout << "New status of pipe(0-Not wotking,1-Working) ";
+						mapPipe[p].work = filter::GetCorrectBool();
+						std::cout << std::endl;
+					}
+				}
+				
+			} 
+
+			
+		}
+		break;
+		case 4: 
+		{
+			break;
+		}
+		break;
+		}
+		
 	}
 	break;
 	}

@@ -3,6 +3,8 @@
 #include <iostream>
 #include "Filter.h"
 #include <cstdlib>
+#include <thread>
+#include <chrono>
 
 using namespace std;
 void StationClass::AddStation()
@@ -48,7 +50,7 @@ void StationClass::ChangeStation()
 			{
 				std::cout << "Name of station now:" << mapStation[ChangeId].name << std::endl;
 				std::cout << "New name:" << std::endl;
-				filter::GetCorrectString(mapStation[ChangeId].name);
+				filter::GetCorrectString(mapStation[ChangeId].name,30);
 			}
 			break;
 			}
@@ -100,73 +102,91 @@ void StationClass::LoadStationFile(std::ifstream& fin)
 	}
 }
 
-void StationClass::FilterStation()
+void StationClass::FilterNameStation()
 {
+	system("cls");
 	StationFilterId.clear();
 	std::string Param;
-	int a;
+	std::cout << "Name of station:";
+	filter::GetCorrectString(Param, 30);
+	std::cout << std::endl;
+	for (const auto& s : mapStation) {
+		if (Param == s.second.name)
+			StationFilterId.push_back(s.first);
+	}
+	if (size(StationFilterId) != 0) {
+		cout << "================================================================================" << endl;
+		cout << "Station" << '\n' << "Id Station" << setw(28) << "Name" << setw(12) << "Workshop" << setw(19) << "Working station" << setw(11) << "Percent" << endl;
+		cout << "================================================================================" << endl;
+		for (const auto& s : StationFilterId) {
+			std::cout << mapStation[s].id << std::setw(37) << mapStation[s].name << std::setw(12) << mapStation[s].WorkShop << std::setw(19) << mapStation[s].NumberWorkShop << std::setw(11) << mapStation[s].eff << std::endl;
+		}
+
+	}
+	else std::cout << "Not find with name:" << Param << ::endl;
+}
+void StationClass::FilterPercentageStation()
+{
+	system("cls");
+	StationFilterId.clear();
 	double k;
-	std::cout << "Choose,1-Name of station,2-Percentage of idle stations" << std::endl;
+	std::cout << "Percentage: ";
+	k=GetCorrectNumber(1.0,100.0);
+	for (const auto& s : mapStation) {
+		if (k * s.second.WorkShop <= (s.second.WorkShop - s.second.NumberWorkShop) * 100)
+			StationFilterId.push_back(s.first);
+	}
+	if (size(StationFilterId) != 0) {
+		cout << "================================================================================" << endl;
+		cout << "Station" << '\n' << "Id Station" << setw(28) << "Name" << setw(12) << "Workshop" << setw(19) << "Working station" << setw(11) << "Percent" << endl;
+		cout << "================================================================================" << endl;
+		for (const auto& s : StationFilterId) {
+			std::cout << mapStation[s].id << std::setw(37) << mapStation[s].name << std::setw(12) << mapStation[s].WorkShop << std::setw(19) << mapStation[s].NumberWorkShop << std::setw(11) << mapStation[s].eff << std::endl;
+		}
+
+	}
+	else std::cout << "Not find with perametr:" << k << ::endl;
+
+}
+void StationClass::FilterStation()
+{
+	system("cls");
+	int a;
+	std::cout << "Choose\n1.Name of station\n2.Percentage of non-working stations\n3.Close" << std::endl;
 	a = GetCorrectNumber(1, 2);
 	switch (a) {
 	case 1:
 	{
-		std::cout << "Name of statiom?" << std::endl;
-		filter::GetCorrectString(Param);
-		for (const auto& s : mapStation) {
-			if (Param == s.second.name)
-				StationFilterId.push_back(s.first);
-		}
-		if (size(StationFilterId) != 0) {
-			cout << "================================================================================" << endl;
-			cout << "Station" << '\n' << "Id Station" << setw(28) << "Name" << setw(12) << "Workshop" << setw(19) << "Working station" << setw(11) << "Percent" << endl;
-			cout << "================================================================================" << endl;
-			for (const auto& s : StationFilterId) {
-				std::cout << mapStation[s].id << std::setw(37) << mapStation[s].name << std::setw(12) << mapStation[s].WorkShop << std::setw(19) << mapStation[s].NumberWorkShop << std::setw(11) << mapStation[s].eff << std::endl;
-			}
-
-		}
-		else std::cout << "Not find with name:" << Param << ::endl;
+		FilterNameStation();
 	}
 	break;
 	case 2:
 	{
-		StationFilterId.clear();
-		std::cout << "Percentage of idle stations" << std::endl;
-		k = GetCorrectNumber(1, 100);
-		for (const auto& s : mapStation) {
-			if (k * s.second.WorkShop <= (s.second.WorkShop - s.second.NumberWorkShop)*100)
-				StationFilterId.push_back(s.first);
-		}
-		if (size(StationFilterId) != 0) {
-			cout << "================================================================================" << endl;
-			cout << "Station" << '\n' << "Id Station" << setw(28) << "Name" << setw(12) << "Workshop" << setw(19) << "Working station" << setw(11) << "Percent" << endl;
-			cout << "================================================================================" << endl;
-			for (const auto& s : StationFilterId) {
-				std::cout << mapStation[s].id << std::setw(37) << mapStation[s].name << std::setw(12) << mapStation[s].WorkShop << std::setw(19) << mapStation[s].NumberWorkShop << std::setw(11) << mapStation[s].eff << std::endl;
-			}
-
-		}
-		else std::cout << "Not find with perametr:" << k << ::endl;
-		
-		}
-	break;
-
+		FilterPercentageStation();
 	}
-
+	break;
+	case 3:
+	{
+		return void();
+	}
+	break;
+	}
 	}
 
 void StationClass::PacketStation()
 {
+	system("cls");
+	if (Station::MaxIdStation == 0) {
+		std::cout << "Enter the station data" << std::endl;
+		return void();
+	}
 	int a;
-	std::cout << "Choose" << std::endl;
-	std::cout << "1-Delete all stations" << std::endl;
-	std::cout << "2-Edit all stations" << std::endl;
-	std::cout << "3-Edit definite stations" << std::endl;
-	a = GetCorrectNumber(1, 3);
+	std::cout << "Choose:\n1.Delete all stations\n2.Edit all stations\n3.Edit definite stations\n4.Close" << std::endl;
+	a = GetCorrectNumber(1, 4);
 	switch (a) {
 	case 1:
 	{
+		system("cls");
 		mapStation.clear();
 		Station::MaxIdStation = 0;
 		std::cout << "All stations are delete" << std::endl;
@@ -174,28 +194,35 @@ void StationClass::PacketStation()
 	break;
 	case 2:
 	{
+		system("cls");
 		int a;
-		std::cout << "Edit of name or number of working station" << std::endl;
-		std::cout << "1-Names of station" << std::endl;
-		std::cout << "2-Numbers of working station" << std::endl;
+		std::cout << "Choose\n1-Name of station\n2-Percentage of idle stations" << std::endl;
 		a = GetCorrectNumber(1, 2);
 		switch (a) {
 		case 1: {
+			system("cls");
 			ShowStation();
 			for (auto& s : mapStation) {
-				std::cout << "Station with id: " << s.second.id << ' ' << "Have name: " << s.second.name << std::endl;
+				std::cout << "Station id: " << s.second.id << ' ' << "Name: " << s.second.name << std::endl;
 				std::cout << "New name: ";
-				s.second.name = filter::GetCorrectString(s.second.name);
+				s.second.name = filter::GetCorrectString(s.second.name,30);
+				std::cout << std::endl;
 			}
 			std::cout << "All stations is edit" << std::endl;
 		}
 			  break;
 		case 2: {
+			system("cls");
 			ShowStation();
+			double eff, Numerator, Denominator;
 			for (auto& s : mapStation) {
-				std::cout << "Station with id: " << s.second.id << ' ' << "Have number of working station: " << s.second.NumberWorkShop << std::endl;
-				std::cout << "New number: ";
-				s.second.NumberWorkShop = GetCorrectNumber(1, s.second.WorkShop);
+				Denominator = s.second.WorkShop;
+				Numerator = s.second.NumberWorkShop;
+				std::cout << "Station id: " << s.second.id << ' ' << "Percentage of non-working stations: " << (1 - Numerator / Denominator) * 100 << std::endl;
+				std::cout << "New Percentage of non - working stations:";
+				eff = GetCorrectNumber(1.0, 100.0);
+				s.second.NumberWorkShop = (1 - eff / 100) * s.second.WorkShop;
+				std::cout << std::endl;
 			}
 			std::cout << "All stations is edit" << std::endl;
 		}
@@ -213,50 +240,145 @@ void StationClass::PacketStation()
 		switch (a) {
 		case 1:
 		{
+			system("cls");
 			ShowStation();
-			StationFilterId.clear();
-			std::string Param;
-			std::string newName;
-			std::cout << "Name of statiom?" << std::endl;
-			filter::GetCorrectString(Param);
-			for (const auto& s : mapStation) {
-				if (Param == s.second.name)
-					StationFilterId.push_back(s.first);
+			std::this_thread::sleep_for(2000ms);
+			FilterNameStation();
+			if (size(StationFilterId) == 0) {
+				break;
 			}
-			if (size(StationFilterId) != 0) {
-				std::cout << "Station is find with name: "<<Param << std::endl;
-				std::cout << "New name: ";
-				filter::GetCorrectString(newName);
-				for (auto& s : StationFilterId) {
-					mapStation[s].name = newName;
+			std::cout << "Edit found stations \n1.Edit all \n2.Edit the specified stations" << std::endl;
+			a = GetCorrectNumber(1, 2);
+			switch (a) {
+			case 1: {
+				for (const auto& p : StationFilterId) {
+					std::cout << "Station id: " << mapStation[p].id << ' ' << "Name: " << mapStation[p].name << std::endl;
+					std::cout << "New name(Max 30 symbol): ";
+					filter::GetCorrectString(mapStation[p].name, 30);
+					std::cout << std::endl;
 				}
-				std::cout << "Selected stations are edit" << endl;
 			}
-			else std::cout << "Not find" << std::endl;
+				  break;
+			case 2:
+			{
+				int a = 1;
+				std::vector<int> res;
+				res.clear();
+				std::cout << "Available IDs: ";
+				for (const auto& p : StationFilterId) {
+					std::cout << p << ' ';
+				}
+				std::cout << std::endl;
+				std::cout << "Write the pipe IDs which you want to change(0-Exit): " << std::endl;
+				while (a != 0) {
+					std::cout << "Id: "; a = GetCorrectNumber(0, Station::MaxIdStation);
+					if (std::find(res.begin(), res.end(), a) != res.end()) {
+						std::cout << "The element repeats" << std::endl; continue;
+					}
+					else res.push_back(a);
+					if ((std::find(StationFilterId.begin(), StationFilterId.end(), a) == StationFilterId.end()) && (a != 0)) {
+						std::cout << "This ID was not found" << std::endl; continue;
+					}
+				}
+				res.pop_back();
+				for (const auto& p : StationFilterId) {
+					for (const auto& d : res) {
+						if (p == d) {
+							std::cout << "Pipe Id: " << mapStation[p].id << ' ' << "Name: " << mapStation[p].name << std::endl;
+							std::cout << "New name(Max 30 symbol): ";
+							filter::GetCorrectString(mapStation[p].name, 30);
+							std::cout << std::endl;
+						}
+					}
+
+				}
+
+			}
+			break;
+			}
 		}
 		break;
 		case 2:
 		{
+			double eff,Numerator,Denominator;
+			system("cls");
 			ShowStation();
-			int Param;
-			StationFilterId.clear();
-			std::cout << "Percent of not working stations?" << std::endl;
-			Param = GetCorrectNumber(1, 100);
-			for (const auto& s : mapStation) {
-				if (Param * s.second.WorkShop <= (s.second.WorkShop - s.second.NumberWorkShop) * 100)
-					StationFilterId.push_back(s.first);
+			std::this_thread::sleep_for(2000ms);
+			FilterPercentageStation();
+			if (size(StationFilterId) == 0) {
+				break;
 			}
-			if (size(StationFilterId) != 0) {
-				for (auto& s : StationFilterId) {
-					std::cout << "Station with this value of not working stations:" << Param << ' ' << "is find" << "Id of station: "<<mapStation[s].id<<' ' << "Number of workingShop: " << mapStation[s].NumberWorkShop << std::endl;
-					mapStation[s].NumberWorkShop = GetCorrectNumber(1, mapStation[s].WorkShop);
+			std::cout << "Edit found stations \n1.Edit all \n2.Edit the specified stations" << std::endl;
+			a = GetCorrectNumber(1, 2);
+			switch (a) {
+			case 1: 
+			{
+				for (const auto& p : StationFilterId) {
+					Denominator = mapStation[p].WorkShop;
+					Numerator = mapStation[p].NumberWorkShop;
+
+					std::cout << "Station id: " << mapStation[p].id << ' ' << "Percentage of non-working stations: " <<(1-Numerator/Denominator)*100<< std::endl;
+					std::cout << "New Percentage of non-working stations: ";
+					eff = GetCorrectNumber(1.0, 100.0);
+					mapStation[p].NumberWorkShop = (1 - eff / 100) * mapStation[p].WorkShop;
+					std::cout << std::endl;
 				}
-				std::cout << "Selected stations are edit" << endl;
+
 			}
-			else std::cout << "Not find" << std::endl;
+			break;
+			case 2: 
+			{
+				int a = 1;
+
+				std::vector<int> res;
+				res.clear();
+				std::cout << "Available IDs: ";
+				for (const auto& p : StationFilterId) {
+					std::cout << p << ' ';
+				}
+				std::cout << std::endl;
+				std::cout << "Write the stations IDs which you want to change(0-Exit): " << std::endl;
+				while (a != 0) {
+					std::cout << "Id: "; a = GetCorrectNumber(0, Station::MaxIdStation);
+					if (std::find(res.begin(), res.end(), a) != res.end()) {
+						std::cout << "The element repeats" << std::endl; continue;
+					}
+					else res.push_back(a);
+					if ((std::find(StationFilterId.begin(), StationFilterId.end(), a) == StationFilterId.end()) && (a != 0)) {
+						std::cout << "This ID was not found" << std::endl; continue;
+					}
+				}
+				res.pop_back();
+				for (const auto& p : StationFilterId) {
+					for (const auto& d : res) {
+						if (p == d) {
+							Denominator = mapStation[p].WorkShop;
+							Numerator = mapStation[p].NumberWorkShop;
+							std::cout << "Pipe Id: " << mapStation[p].id << ' ' << "Percentage of non - working stations :"  << (1 - Numerator / Denominator) * 100 << std::endl;
+							std::cout << "New Percentage of non - working stations:";
+							eff = GetCorrectNumber(1.0, 100.0);
+							mapStation[p].NumberWorkShop = (1 - eff / 100) * mapStation[p].WorkShop;
+							std::cout << std::endl;
+						}
+					}
+
+				}
+
+
+			}
+			break;
+			}
+			
+		}
+
+		}}
+	case 4 : 
+		{
+			return void();
 		}
 		break;
 		}
 	}
-	}
-	}
+	
+	
+

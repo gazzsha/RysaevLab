@@ -17,7 +17,6 @@ public:
 	void SavePipeFile(std::ofstream& out);
 	void LoadPipeFile(std::ifstream& fin);
 	void FilterPaip();
-	void SearchByFilter();
 	void PacketPipe();
 
 };
