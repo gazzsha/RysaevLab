@@ -8,8 +8,8 @@ public:
 	double length, diameter;
 	bool work;
 	bool connected;
-	size_t inId;
-	size_t outId;
+	int inId;
+	int outId;
 	Pipe();
 	void SavePipe(std::ofstream&out);
 	Pipe(std::ifstream& fin);

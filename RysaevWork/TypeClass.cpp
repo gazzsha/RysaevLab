@@ -23,7 +23,10 @@ void Pipe::SavePipe(std::ofstream& out)
 	out << id << std::endl
 		<< length << std::endl
 		<< diameter << std::endl
-		<< work << std::endl;
+		<< work << std::endl
+		<< connected << std::endl
+		<< inId << std::endl
+		<< outId << std::endl;
 }
 
 Pipe::Pipe(std::ifstream& fin)
@@ -31,8 +34,10 @@ Pipe::Pipe(std::ifstream& fin)
 	fin >> this->id
 		>> this->length
 		>> this->diameter
-		>> this->work;
-		this->connected=false;
+		>> this->work
+		>> this->connected
+		>> this->inId
+		>> this->outId;
 
 }
 

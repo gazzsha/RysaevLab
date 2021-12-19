@@ -115,6 +115,7 @@ int main()
 				fin.close();
 			}
 			else cout << "Not find file" << endl;
+			InfNetWork.LoadFromFile();
 		}
 		break;
 		case 10:

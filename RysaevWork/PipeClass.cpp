@@ -3,6 +3,7 @@
 #include "Filter.h"
 #include "TypeClass.h"
 #include <algorithm>
+#include "Network.h"
 
 void PipeClass::AddPipe()
 {

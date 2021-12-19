@@ -62,6 +62,26 @@ void Graph::Menu()
 
 
 
+void Graph::LoadFromFile()
+{
+	used.clear();
+	graphNetwork.clear();
+	mapNetwork.clear();
+	freeId.clear();
+	busyId.clear();
+	for (auto& s : mapPipe) {
+		if (s.second.connected !=0) {
+			busyId.push_back(s.second.id);
+			used.emplace(s.second.inId,0);
+			used.emplace(s.second.outId,0);
+			Network network(s.second.inId,s.second.outId);
+			mapNetwork.emplace(s.second.id, network);
+			graphNetwork.emplace(s.second.inId, s.second.outId);
+			mapNetwork.emplace(s.second.id, Network(s.second.inId, s.second.outId));
+		}
+	}
+}
+
 void Graph::AddNetWork()
 {
 	int Id, out;
@@ -90,7 +110,7 @@ void Graph::AddNetWork()
 				mapPipe[Id].connected = true;
 				std::cout << "Choose input Station" << std::endl;
 				mapPipe[Id].inId = GetCorrectNumber(1, Station::MaxIdStation);
-				used.emplace(mapPipe[Id].inId, false);
+				used.emplace(mapPipe[Id].inId, 0);
 				std::cout << "Choose output Station" << std::endl;
 				out = GetCorrectNumber(1, Station::MaxIdStation);
 				{
@@ -102,7 +122,7 @@ void Graph::AddNetWork()
 				mapPipe[Id].outId = out;
 				Network network(mapPipe[Id].inId, mapPipe[Id].outId);
 				mapNetwork.emplace(Id,network);
-				used.emplace(out, false);
+				used.emplace(out, 0);
 				graphNetwork.emplace(mapPipe[Id].inId, mapPipe[Id].outId);
 				mapNetwork.emplace(Id, Network(mapPipe[Id].inId, mapPipe[Id].outId));
 				busyId.push_back(Id);
@@ -114,27 +134,35 @@ void Graph::AddNetWork()
 	}
 }
 
-void Graph::dfs(int a, std::vector<int>& ans)
+void Graph::dfs(int a, std::vector<int>& ans,bool &cycle)
 {
-	used[a] = true;
+	used[a] = 1;
+	if (graphNetwork.find(a) == graphNetwork.end()) {
+		used[a] = 3;
+	}
 	for (auto& s : graphNetwork) {
 		if (s.first == a) {
 			int next = s.second;
-			if (!used[next]) 
-				dfs(next, ans);
+			if (used[next]==0) {
+				dfs(next, ans,cycle);
+			}
+			else if (used[next]==1)
+				cycle = true;
 		}
-	}
+		} 
+	
 	ans.push_back(a);
 }
 
 void Graph::sort()
 {
+	
 	for (auto& s : used) 
-		s.second = false;
+		s.second = 0;
 		ans.clear();
 		for (auto& s : used) {
-			if (s.second==false) {
-				dfs(s.first, ans);
+			if (s.second==0) {
+				dfs(s.first, ans,cycle);
 			}
 		}
 std::reverse(ans.begin(), ans.end());	
@@ -145,15 +173,21 @@ void Graph::Show()
 {
 	std::cout << "The original graph: ";
 	for (auto& s : used) {
-		std::cout << s.first;
+		std::cout << s.first << ' ';
 	}
 	std::cout << std::endl;
 	sort();
-	
+	std::cout << std::endl;
+	if (cycle == true) {
+		std::cout << "Graph is cycle" << std::endl;
+	}
+	else {
+
 		std::cout << "Final graph: \n";
 		for (auto& s : ans)
 			std::cout << s << ' ';
-		std::cout << std::endl;
+		std::cout << std::endl; 
+	}
 	}
 
 void Graph::Delete()
@@ -173,12 +207,15 @@ void Graph::Delete()
 				Id = GetCorrectNumber(1, *std::max_element(busyId.begin(), busyId.end()));
 				if (find(busyId.begin(), busyId.end(), Id) != busyId.end()) {
 					mapPipe[Id].connected = false;
+					mapPipe[Id].inId = -1;
+					mapPipe[Id].outId = -1;
 					used.erase(Id);
 					graphNetwork.erase(mapPipe[Id].inId);
 					busyId.erase(find(busyId.begin(), busyId.end(), Id));
 					mapPipe[Id].inId = -1;
 					mapPipe[Id].outId = -1;
 					mapNetwork.erase(Id);
+
 
 				}
 				else std::cout << "Not find Id" << std::endl;
