@@ -15,6 +15,7 @@ Pipe::Pipe()
 	this->diameter = GetCorrectNumber(1, 100);
 	std::cout << "Work status:" << std::endl;
 	this->work = filter::GetCorrectBool();
+	this->connected = false;
 }
 
 void Pipe::SavePipe(std::ofstream& out)
@@ -31,6 +32,7 @@ Pipe::Pipe(std::ifstream& fin)
 		>> this->length
 		>> this->diameter
 		>> this->work;
+		this->connected=false;
 
 }
 
@@ -66,4 +68,10 @@ Station::Station(std::ifstream& fin)
 	fin >> this-> WorkShop
 		>> this->NumberWorkShop
 		>> this->eff;
+}
+
+Network::Network(int a, int b)
+{
+	this->idinSt = a;
+	this->idoutSt = b;
 }

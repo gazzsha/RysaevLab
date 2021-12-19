@@ -13,11 +13,11 @@ void PipeClass::AddPipe()
 void PipeClass::ShowPipe()
 {
 	if (size(mapPipe) != 0) {
-		std::cout << "==================================================" << std::endl;
-		std::cout << "Pipe" << '\n' << "Id Pipe" << std::setw(12) << "Length" << std::setw(19) << "Diameter" << std::setw(11) << "Work" << std::endl;
-		std::cout << "==================================================" << std::endl;
+		std::cout << "=============================================================" << std::endl;
+		std::cout << "Pipe" << '\n' << "Id Pipe" << std::setw(12) << "Length" << std::setw(19) << "Diameter" << std::setw(11) << "Work" << std::setw(12) << "Connected"<< std::endl;
+		std::cout << "=============================================================" << std::endl;
 		for (const auto& p : mapPipe) {
-			std::cout << p.second.id << std::setw(18) << p.second.length << std::setw(18) << p.second.diameter << std::setw(12) << p.second.work << std::endl;
+			std::cout << p.second.id << std::setw(18) << p.second.length << std::setw(18) << p.second.diameter << std::setw(12) << p.second.work << std::setw(12)<<p.second.connected<< std::endl;
 		}
 	}
 	else std::cout << "Not input pipe" << std::endl;
@@ -49,9 +49,12 @@ void PipeClass::DeletePipe()
 		DeleteId = GetCorrectNumber(1, Pipe::MaxIdPipe);
 		if (mapPipe.find(DeleteId) != mapPipe.end()) {
 			std::cout << "Pipe is find" << std::endl;
-			mapPipe.erase(DeleteId);
-			
-			std:: cout<< "Pipe is delete" << std::endl;
+			if (mapPipe[DeleteId].connected == 0) {
+				mapPipe.erase(DeleteId);
+
+				std::cout << "Pipe is delete" << std::endl;
+			}
+			else std::cout << "Pipe has link" << std::endl;
 		}
 		else std::cout << "Pipe is not find" << std::endl;
 	}

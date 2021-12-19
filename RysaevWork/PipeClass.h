@@ -5,9 +5,9 @@
 #include <vector>
 class PipeClass
 {
-private: 
-	std::unordered_map<int, Pipe> mapPipe;
+protected:
 	std::vector<int> PipeFilterId;
+	std::unordered_map<int, Pipe> mapPipe;
 
 public:
 	void AddPipe();
@@ -18,6 +18,6 @@ public:
 	void LoadPipeFile(std::ifstream& fin);
 	void FilterPaip();
 	void PacketPipe();
-
+	friend class Graph;
 };
 

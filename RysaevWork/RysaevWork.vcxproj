@@ -140,6 +140,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Filter.cpp" />
+    <ClCompile Include="Network.cpp" />
     <ClCompile Include="PipeClass.cpp" />
     <ClCompile Include="RysaevWork.cpp" />
     <ClCompile Include="StationClass.cpp" />
@@ -147,6 +148,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Filter.h" />
+    <ClInclude Include="Network.h" />
     <ClInclude Include="PipeClass.h" />
     <ClInclude Include="StationClass.h" />
     <ClInclude Include="TypeClass.h" />

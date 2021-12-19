@@ -7,6 +7,9 @@ public:
 	size_t id;
 	double length, diameter;
 	bool work;
+	bool connected;
+	size_t inId;
+	size_t outId;
 	Pipe();
 	void SavePipe(std::ofstream&out);
 	Pipe(std::ifstream& fin);
@@ -23,5 +26,12 @@ public:
 	void SaveStation(std::ofstream& out);
 	Station(std::ifstream& fin);
 
+};
+
+class Network {
+public: 
+	size_t idinSt;
+	size_t idoutSt;
+	Network(int a,int b);
 };
 

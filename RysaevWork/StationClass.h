@@ -4,7 +4,7 @@
 #include <vector>
 class StationClass
 {
-private:
+protected:
 	std::unordered_map<int, Station> mapStation;
 	std::vector<int>StationFilterId;
 public: 
@@ -18,5 +18,6 @@ public:
 	void PacketStation();
 	void FilterNameStation();
 	void FilterPercentageStation();
+	friend class Network;
 };
 

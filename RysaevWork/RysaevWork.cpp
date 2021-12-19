@@ -5,6 +5,7 @@
 #include "TypeClass.h"
 #include "PipeClass.h"
 #include "StationClass.h"
+#include "Network.h"
 #include "Filter.h"
 #include <fstream>
 #include <vector>
@@ -29,6 +30,7 @@ void printMenu() {
 	cout << "11.Search station by filter" << endl;
 	cout << "12.Packet edit pipes" << endl;
 	cout << "13.Packet edit stations" << endl;
+	cout << "14.NetWork" << endl;
 
 }
 
@@ -36,48 +38,48 @@ void printMenu() {
 
 int main()
 {
-	PipeClass PipeInf;
-	StationClass StationInf;
+
+	Graph InfNetWork;
 	while (1) {
 		printMenu();
-		switch (GetCorrectNumber(1, 13))
+		switch (GetCorrectNumber(1, 14))
 		{
 		case 1:
 		{
-			PipeInf.AddPipe();
+			InfNetWork.AddPipe();
 
 		}
 		break;
 		case 2:
 		{
-			StationInf.AddStation();
+			InfNetWork.AddStation();
 		}
 		break;
 		case 3:
 		{
 			system("cls");
-			PipeInf.ShowPipe();
-			StationInf.ShowStation();
+			InfNetWork.ShowPipe();
+			InfNetWork.ShowStation();
 		}
 		break;
 		case 4:
 		{
-			PipeInf.ChangePipe();
+			InfNetWork.ChangePipe();
 		}
 		break;
 		case 5:
 		{
-			StationInf.ChangeStation();
+			InfNetWork.ChangeStation();
 		}
 		break;
 		case 6:
 		{
-			PipeInf.DeletePipe();
+			InfNetWork.DeletePipe();
 		}
 		break;
 		case 7:
 		{
-			StationInf.DeleteStation();
+			InfNetWork.DeleteStation();
 		}
 		break;
 		case 8:
@@ -90,9 +92,9 @@ int main()
 				out.open(filename, ios::out);
 				if (out.is_open())
 				{
-					PipeInf.SavePipeFile(out);
+					InfNetWork.SavePipeFile(out);
 					out << ' ' << std::endl;
-					StationInf.SaveStationFile(out);
+					InfNetWork.SaveStationFile(out);
 					out.close();
 				}
 			
@@ -107,9 +109,9 @@ int main()
 			filter::GetCorrectString(filename,20);
 			fin.open(filename, ios::in);
 			if (fin.is_open()) {
-				PipeInf.LoadPipeFile(fin);
+				InfNetWork.LoadPipeFile(fin);
 				fin.ignore(1000, '\n');
-				StationInf.LoadStationFile(fin);
+				InfNetWork.LoadStationFile(fin);
 				fin.close();
 			}
 			else cout << "Not find file" << endl;
@@ -117,22 +119,27 @@ int main()
 		break;
 		case 10:
 		{
-			PipeInf.FilterPaip();
+			InfNetWork.FilterPaip();
 		}
 		break;
 		case 11:
 		{
-			StationInf.FilterStation();
+			InfNetWork.FilterStation();
 		}
 		break;
 		case 12: 
 		{
-			PipeInf.PacketPipe();
+			InfNetWork.PacketPipe();
 		}
 		break;
 		case 13: 
 		{
-			StationInf.PacketStation();
+			InfNetWork.PacketStation();
+		}
+		break;
+		case 14:
+		{
+			InfNetWork.Menu();
 		}
 		break;
 		}
